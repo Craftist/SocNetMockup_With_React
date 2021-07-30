@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SocNetMockup.DtoMappers
 {
-    public class Mapper<TFrom, TTo>
+    public class Mapper<TFrom, TTo> where TFrom : class where TTo : class
     {
         private readonly Func<TFrom, TTo> map;
 
@@ -13,7 +13,12 @@ namespace SocNetMockup.DtoMappers
             this.map = map;
         }
 
-        public TTo Map(TFrom from) => map(from);
-        public IEnumerable<TTo> Map(IEnumerable<TFrom> from) => from.Select(x => map(x));
+        public TTo Map(TFrom from)
+        {
+            if (from == null) return null;
+            return map(from);
+        }
+
+        public IEnumerable<TTo> Map(IEnumerable<TFrom> from) => from.Select(Map);
     }
 }

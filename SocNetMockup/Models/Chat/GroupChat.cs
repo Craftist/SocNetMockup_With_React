@@ -8,6 +8,7 @@ namespace SocNetMockup.Models.Chat
         public Guid Id { get; set; }
 
         public string Title { get; set; }
+        public DateTime CreationDate { get; set; }
 
         /// <summary>
         /// ID of a GroupChatMember of a chat owner.

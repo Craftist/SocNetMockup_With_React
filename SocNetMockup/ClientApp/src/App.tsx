@@ -9,6 +9,7 @@ import {ApplicationPaths} from './components/api-authorization/ApiAuthorizationC
 import './custom.css'
 import {MessengerPage} from "./components/messenger/MessengerPage";
 import { NotFound } from './components/NotFound';
+import { Token } from './components/Token';
 
 export default class App extends Component {
     static displayName = App.name;
@@ -19,6 +20,7 @@ export default class App extends Component {
                 <Switch>
                     <Route exact path='/' component={Home}/>
                     <AuthorizeRoute path='/messenger' component={MessengerPage} />
+                    <AuthorizeRoute path='/token' component={Token} />
                     <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes}/>
 
                     <Route component={NotFound} />
