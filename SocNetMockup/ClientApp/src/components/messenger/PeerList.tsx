@@ -1,5 +1,6 @@
 import React, {ReactNode, useState} from "react";
 import {PeerListItem, PeerListItemObject} from "./PeerListItem";
+import {ChatWindow} from "./ChatWindow";
 
 export interface PeerListProps {
     children?: ReactNode

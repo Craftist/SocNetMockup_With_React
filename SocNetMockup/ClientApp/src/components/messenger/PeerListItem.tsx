@@ -1,22 +1,26 @@
 import React from "react";
 
-export interface PeerProps {
+export interface PeerProps extends PeerListItemObject {
     id: string
     name: string
     lastMessage?: string
     image?: string
+
+    selected: boolean
+
+    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
 export function PeerListItem(props: PeerProps) {
     return (
-        <div>
-            <div>Peer ID: {props.id}</div>
-            <div>Peer Name: {props.name}</div>
+        <div className={"peer-list-item " + (props.selected ? "selected" : "")} onClick={props.onClick}>
+            <div className="image"><img src="img/unknown-peer-chat.png"/> </div>
+            <div className="name">{props.name}</div>
         </div>
     )
 }
 
-export class PeerListItemObject implements PeerProps {
+export class PeerListItemObject {
     id: string;
     name: string;
     lastMessage?: string;

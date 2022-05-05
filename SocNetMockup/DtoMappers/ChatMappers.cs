@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using SocNetMockup.Dtos.Chat;
-using SocNetMockup.Models.Chat;
+using SocNetMockup.Models.Messenger;
 
 namespace SocNetMockup.DtoMappers
 {
@@ -12,7 +12,7 @@ namespace SocNetMockup.DtoMappers
             Title = chat.Title,
             CreationDate = chat.CreationDate
         });
-        
+
         public static readonly Mapper<GroupChat, GroupChatWithMembersDto> ChatWithMembers = new(chat => new() {
             Id = chat.Id,
             Owner = Member.Map(chat.Members.FirstOrDefault(x => x.Id == chat.OwnerId)),
@@ -20,7 +20,7 @@ namespace SocNetMockup.DtoMappers
             CreationDate = chat.CreationDate,
             Members = Member.Map(chat.Members)
         });
-        
+
         public static readonly Mapper<GroupChatMember, GroupChatMemberDto> Member = new(member => new() {
             Id = member.User.Id,
             UserName = member.User.UserName

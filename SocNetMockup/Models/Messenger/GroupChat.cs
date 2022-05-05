@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SocNetMockup.Models.Chat
+namespace SocNetMockup.Models.Messenger
 {
     public class GroupChat
     {
@@ -15,5 +15,7 @@ namespace SocNetMockup.Models.Chat
         /// </summary>
         public Guid OwnerId { get; set; }
         public IEnumerable<GroupChatMember> Members { get; set; }
+        
+        public IEnumerable<Message> Messages { get; set; }
     }
 }

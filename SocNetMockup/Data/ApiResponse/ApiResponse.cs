@@ -10,11 +10,11 @@ namespace SocNetMockup.Data.ApiResponse
             this["success"] = true;
             this["response"] = response;
         }
-        
+
         public ApiResponse(IEnumerable<object> response)
         {
             var resp = response.ToArray();
-            
+
             this["success"] = true;
             this["count"] = resp.Length;
             this["response"] = resp;

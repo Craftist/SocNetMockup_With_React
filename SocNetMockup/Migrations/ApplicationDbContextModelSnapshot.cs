@@ -122,34 +122,6 @@ namespace SocNetMockup.Migrations
                     b.ToTable("PersistedGrants");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -255,7 +227,42 @@ namespace SocNetMockup.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SocNetMockup.Models.Chat.GroupChat", b =>
+            modelBuilder.Entity("PmPeerUser", b =>
+                {
+                    b.Property<Guid>("MembersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PeersId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MembersId", "PeersId");
+
+                    b.HasIndex("PeersId");
+
+                    b.ToTable("PmPeerUser");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Image", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Extension")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Image");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.GroupChat", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -275,16 +282,19 @@ namespace SocNetMockup.Migrations
                     b.ToTable("GroupChats");
                 });
 
-            modelBuilder.Entity("SocNetMockup.Models.Chat.GroupChatMember", b =>
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.GroupChatMember", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ChatId")
+                    b.Property<Guid>("ChatId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<string>("Nickname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -294,6 +304,98 @@ namespace SocNetMockup.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("GroupChatMembers");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.GroupChatRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("GroupChatMemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupChatMemberId");
+
+                    b.ToTable("GroupChatRole");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ChatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PeerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("PeerId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("GroupChatMessages");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.PmPeer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CoverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoverId");
+
+                    b.ToTable("PmPeers");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
                 });
 
             modelBuilder.Entity("SocNetMockup.Models.User", b =>
@@ -367,7 +469,7 @@ namespace SocNetMockup.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("SocNetMockup.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -394,7 +496,7 @@ namespace SocNetMockup.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
+                    b.HasOne("SocNetMockup.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -416,24 +518,92 @@ namespace SocNetMockup.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SocNetMockup.Models.Chat.GroupChatMember", b =>
+            modelBuilder.Entity("PmPeerUser", b =>
                 {
-                    b.HasOne("SocNetMockup.Models.Chat.GroupChat", "Chat")
+                    b.HasOne("SocNetMockup.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("MembersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SocNetMockup.Models.Messenger.PmPeer", null)
+                        .WithMany()
+                        .HasForeignKey("PeersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.GroupChatMember", b =>
+                {
+                    b.HasOne("SocNetMockup.Models.Messenger.GroupChat", "Chat")
                         .WithMany("Members")
-                        .HasForeignKey("ChatId");
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SocNetMockup.Models.User", "User")
                         .WithMany("GroupChatMemberships")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Chat");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SocNetMockup.Models.Chat.GroupChat", b =>
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.GroupChatRole", b =>
+                {
+                    b.HasOne("SocNetMockup.Models.Messenger.GroupChatMember", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("GroupChatMemberId");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.Message", b =>
+                {
+                    b.HasOne("SocNetMockup.Models.Messenger.GroupChat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId");
+
+                    b.HasOne("SocNetMockup.Models.Messenger.PmPeer", "Peer")
+                        .WithMany("Messages")
+                        .HasForeignKey("PeerId");
+
+                    b.HasOne("SocNetMockup.Models.Messenger.GroupChatMember", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId");
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Peer");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.PmPeer", b =>
+                {
+                    b.HasOne("SocNetMockup.Models.Image", "Cover")
+                        .WithMany()
+                        .HasForeignKey("CoverId");
+
+                    b.Navigation("Cover");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.GroupChat", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.GroupChatMember", b =>
+                {
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("SocNetMockup.Models.Messenger.PmPeer", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("SocNetMockup.Models.User", b =>

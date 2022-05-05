@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using SocNetMockup.Models.Chat;
+using SocNetMockup.Models.Messenger;
 
 namespace SocNetMockup.Models
 {
@@ -10,5 +10,7 @@ namespace SocNetMockup.Models
         public IEnumerable<GroupChatMember> GroupChatMemberships { get; set; }
 
         public DateTime RegistrationDate { get; set; }
+        
+        public IEnumerable<PmPeer> Peers { get; set; }
     }
 }

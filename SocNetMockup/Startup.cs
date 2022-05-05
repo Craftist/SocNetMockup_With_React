@@ -1,4 +1,7 @@
+using System;
+using System.Linq;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SocNetMockup.Data;
 using SocNetMockup.Models;
+using SocNetMockup.SignalR;
 
 namespace SocNetMockup
 {
@@ -41,13 +45,19 @@ namespace SocNetMockup
                             RequireNonAlphanumeric = false
                         };
                     })
+                    .AddRoles<Role>()
                     .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddIdentityServer()
-                    .AddApiAuthorization<User, AppDbContext>();
+                    .AddApiAuthorization<User, AppDbContext>(conf => {
+                        var client = conf.Clients.First();
+                        client.AccessTokenLifetime = (int) TimeSpan.FromDays(365).TotalSeconds;
+                    });
 
             services.AddAuthentication()
                     .AddIdentityServerJwt();
+
+            services.AddSignalR();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -80,9 +90,10 @@ namespace SocNetMockup
             app.UseIdentityServer();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => {
+                endpoints.MapHub<ChatHub>("/chat");
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 

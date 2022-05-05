@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using SocNetMockup.Models;
+using SocNetMockup.Util.Attributes;
 
 namespace SocNetMockup.Areas.Identity.Pages.Account
 {
@@ -52,6 +53,12 @@ namespace SocNetMockup.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
+            [StringLengthRange(5, 20, ErrorMessage = "Username should be at least 5 symbols and at most 20.")]
+            [RegularExpression("^[a-zA-Z0-9_.]+$", ErrorMessage = "You can only use letters, numbers, dots (.) and underscores (_) in a user name.")]
+            [Display(Name = "Username")]
+            public string UserName { get; set; }
+
+            [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -73,12 +80,10 @@ namespace SocNetMockup.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
-            {
-                var user = new User { UserName = Input.Email, Email = Input.Email, RegistrationDate = DateTime.Now };
+            if (ModelState.IsValid) {
+                var user = new User { UserName = Input.UserName, Email = Input.Email, RegistrationDate = DateTime.Now };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -92,18 +97,15 @@ namespace SocNetMockup.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount) {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
+                    } else {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }
-                foreach (var error in result.Errors)
-                {
+
+                foreach (var error in result.Errors) {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }

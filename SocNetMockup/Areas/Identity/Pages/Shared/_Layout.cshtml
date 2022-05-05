@@ -1,12 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Html
+<!DOCTYPE html>
 <html>
 <head>
     <title>@ViewData["Title"]</title>
+    <link href="~/css/identity.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
 @RenderBody()
 
+<script src="~/js/jQuery.min.js"></script>
 @await RenderSectionAsync("Scripts", required: false)
 
 </body>

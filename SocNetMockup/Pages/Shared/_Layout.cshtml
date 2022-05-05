@@ -2,11 +2,14 @@
 <html>
 <head>
     <title>@ViewData["Title"]</title>
+    <link href="~/css/site.css" rel="stylesheet">
+
 </head>
 <body>
 
 @RenderBody()
 
+<script src="~/js/jQuery.min.js"></script>
 @await RenderSectionAsync("Scripts", required: false)
 
 </body>

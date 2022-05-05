@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocNetMockup.Data;
@@ -11,7 +12,7 @@ using SocNetMockup.Dtos.Chat;
 namespace SocNetMockup.Controllers
 {
     [ApiController, Route("api/[controller]")]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
         private readonly AppDbContext dbContext;
 
@@ -24,6 +25,11 @@ namespace SocNetMockup.Controllers
         public ActionResult<IEnumerable<UserDto>> GetAll()
         {
             return Ok(Mappers.User.Map(dbContext.Users));
+        }
+
+        public IActionResult GetTeapot()
+        {
+            return StatusCode(499);
         }
 
         [HttpGet("{userId:guid}")]
@@ -42,7 +48,7 @@ namespace SocNetMockup.Controllers
                          .First(u => u.Id == userId)
                          .GroupChatMemberships
                          .Select(x => x.Chat);
-            
+
             return Ok(ChatMappers.Chat.Map(result));
         }
     }

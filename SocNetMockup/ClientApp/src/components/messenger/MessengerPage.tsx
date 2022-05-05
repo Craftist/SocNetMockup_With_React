@@ -1,19 +1,49 @@
 ﻿import * as React from "react";
 import {PeerList} from "./PeerList";
-import {PeerListItem} from "./PeerListItem";
-import {ChatWindow} from "./ChatWindow";
+import {PeerListItem, PeerListItemObject} from "./PeerListItem";
+import {ChatWindow, ChatWindowProps} from "./ChatWindow";
+import {FC, forwardRef, useEffect, useRef, useState} from "react";
+import {Api} from "../api/Api";
+import {Button} from "../Button";
 
 export interface MessengerPageProps {}
+
 export function MessengerPage(props: MessengerPageProps) {
+    const [peers, setPeers] = useState<PeerListItemObject[]>([])
+    const [selectedPeer, setSelectedPeer] = useState<PeerListItemObject>()
+
+    const chatWindowRef: React.RefObject<typeof ChatWindow> = React.createRef();
+
+    useEffect(() => {
+        async function getPeersAsync() {
+            const peerResponse = await Api.Chats.get();
+            console.log('peerResponse', peerResponse);
+
+            const newPeers: PeerListItemObject[] = [];
+            for (const peer of peerResponse.response) {
+                newPeers.push({
+                    id: peer.id,
+                    name: peer.title
+                });
+            }
+
+            setPeers(newPeers);
+        }
+
+        getPeersAsync();
+    }, []);
+
     return (
-        <div>
+        <div id="MessengerPage">
             <PeerList>
-                <PeerListItem id="1234" name="First peer" />
-                <PeerListItem id="5678" name="Second peer" />
-                <PeerListItem id="90ab" name="Third peer" />
+                {peers.map(peerProps =>
+                    <PeerListItem
+                        {...peerProps}
+                        selected={peerProps === selectedPeer}
+                        onClick={ev => setSelectedPeer(peerProps)} />)}
+                <Button className="btn-primary">Add chat</Button>
             </PeerList>
-            <ChatWindow/>
+            <ChatWindow selectedPeer={selectedPeer} />
         </div>
     )
 }
-

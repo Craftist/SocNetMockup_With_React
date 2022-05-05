@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import authService from "./api-authorization/AuthorizeService";
 
 export function Token() {
-    const [token, setToken] = useState()
+    const [token, setToken] = useState<string>()
 
     useEffect(function() {
         getToken();
@@ -10,7 +10,7 @@ export function Token() {
 
     async function getToken() {
         const tok = await authService.getAccessToken();
-        setToken(tok);
+        setToken(tok!);
     }
 
     return (
